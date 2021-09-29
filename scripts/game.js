@@ -1,3 +1,11 @@
+const PlayerSetting = (character, type, mode) => {
+    return{
+        character,
+        type,
+        mode,
+    };
+}
+
 const Player = () => {
     let _character = "";
     let _type = "";
@@ -37,17 +45,26 @@ const Board = (() => {
     const squaresArray = [];
     squares.forEach((value) => {
         squaresArray.push(value);
-    })
+    });
 
     const initialize = () => {
         squares.forEach((value) => {
             value.textContent = "";
         });
-    }
+    };
+
+    const isValidIndex = (index) => {
+        if(index < 0 || index >= squaresArray.length) {
+            console.error("Index out of range");
+            return false;
+        }
+        return squaresArray[index].textContent === "";
+    };
 
     return {
         squaresArray,
         initialize,
+        isValidIndex,
     };
 })();
 
@@ -72,11 +89,24 @@ const Game = (() => {
     const markByAI = () => {
         if (currentPlayer.getMode() === "easy") {
             currentPlayer.markByEasyAI(currentPlayer.getCharacter());
-            checkGameOver();
+            const result = isGameOver();
+            if(result) showResult(result);
+            else changeTurn();
         }
     };
-    const markByHuman = () => { };
-    const checkGameOver = () => {
+    const markByHuman = (index) => {
+        if(!Board.isValidIndex(index) || currentPlayer.getType() !== "human"){
+            return;
+        }
+        if(isGameOver()){
+            return;
+        }
+        Board.squaresArray[index].textContent = currentPlayer.getCharacter();
+        const result = isGameOver();
+        if(result) showResult(result);
+        else changeTurn();
+    };
+    const isGameOver = () => {
         const lines = [
             [0, 1, 2],
             [3, 4, 5],
@@ -93,17 +123,15 @@ const Game = (() => {
             if (squares[a].textContent !== ""
                 && squares[a].textContent === squares[b].textContent
                 && squares[a].textContent === squares[c].textContent) {
-                showResult(squares[a].textContent);
-                return;
+                return squares[a].textContent;
             }
         }
 
         const isNotEmpty = (value) => value.textContent !== "";
         if(squares.every(isNotEmpty)) {
-            showResult("tie");
-            return;
+            return "tie";
         }else {
-            changeTurn();
+            return null;
         }
     };
     const changeTurn = () => {
@@ -120,8 +148,18 @@ const Game = (() => {
 
     return {
         initialize,
+        markByHuman,
     };
 })();
 
-Game.initialize({ character: "X", type: "AI", mode: "easy" },
-    { character: "O", type: "AI", mode: "easy" });
+Game.initialize(PlayerSetting("X", "human", "easy"),
+    PlayerSetting("O", "human", "easy"));
+
+const boardContainer = document.getElementById("board-container");
+
+boardContainer.addEventListener("click", (event) => {
+    const index = event.target.dataset.index;
+    if(index) {
+        Game.markByHuman(parseInt(index));
+    }
+});
