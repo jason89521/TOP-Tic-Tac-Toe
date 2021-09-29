@@ -1,0 +1,33 @@
+.board-container{
+    display: flex;
+    flex-direction: column;
+    gap: 0px;
+}
+
+.board-row{
+    display:flex;
+    gap: 0px;
+    border: 1px solid #000000;
+    border-bottom: none;
+}
+
+.board-row:last-child{
+    border-bottom: 1px solid #000000;
+}
+
+.square{
+    width: 150px;
+    height: 150px;
+    padding: 0px;
+    border: none;
+    border-right: 1px solid #000000;
+    box-sizing: content-box;
+}
+
+.square:last-child{
+    border-right: none;
+}
+
+.square:focus{
+    outline: none;
+}
