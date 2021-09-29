@@ -1,164 +1,83 @@
 const Player = () => {
-    let _char = ""
+    let _character = "";
     let _type = "";
     let _mode = "";
 
-    const initPlayer = (setting) => {
-        _char = setting.char;
+    const initialize = (setting) => {
+        _character = setting.character;
         _type = setting.type;
         _mode = setting.mode;
     };
-    const getType = () => { return _type };
-    const getMode = () => { return _mode };
-    const getChar = () => { return _char };
 
-    const _esayAI = () => {
-        const squares = Board.getSquares();
-        const options = [];
-        squares.forEach((value, index) => {
-            if(value === "")
-                options.push(index);
+    const getCharacter = () => _character;
+    const getType = () => _type;
+    const getMode = () => _mode;
+
+    const markByEasyAI = (character) => {
+        const remainingSquare = [];
+        Board.squaresArray.forEach((value) => {
+            if (value.textContent === "") {
+                remainingSquare.push(value);
+            }
         });
-        return options[0];
+        remainingSquare[0].textContent = character;
     }
 
-    /**
-     * Determine which square to mark by AI.
-     */
-    const determineByAI = () => { 
-        if(_mode == "easy") return _esayAI();
-    };
-
     return {
-        initPlayer,
+        initialize,
+        getCharacter,
         getType,
         getMode,
-        getChar,
-        determineByAI,
+        markByEasyAI,
     };
 };
 
 const Board = (() => {
-    const _squares = ["", "", "", "", "", "", "", "", ""];
+    const squares = document.querySelectorAll(".square");
+    const squaresArray = [];
+    squares.forEach((value) => {
+        squaresArray.push(value);
+    })
 
-    const initBoard = () => {
-        const len = _squares.length;
-        for (let i = 0; i < len; i++)
-            _squares[i] = "";
-    };
-
-    const isValidIndex = (index) => {
-        if (index < 0 || index >= _squares.length) {
-            console.error("Index out of range.");
-            return false;
-        }
-
-        return _squares[index] === "";
-    };
-
-    const getSquares = () => { return _squares.slice(0); };
-
-    /**
-     * Set `_squares[index]` = `char`.
-     * @param {number} index 
-     * @param {string} char 
-     * @returns {boolean} Success or not.
-     */
-    const setSquares = (index, char) => {
-        if (isValidIndex(index)) {
-            _squares[index] = char;
-            return true;
-        }
-
-        return false
+    const initialize = () => {
+        squares.forEach((value) => {
+            value.textContent = "";
+        });
     }
 
     return {
-        initBoard,
-        isValidIndex,
-        getSquares,
-        setSquares,
+        squaresArray,
+        initialize,
     };
 })();
 
-/**
- * 1. Call `initGame()` to initialize the game.
- * 2. Call `startTurn()`.
- *     * If current player is human, do nothing, and return false 
- *       which means that there is no need to render board immediately.
- *     * Else, this module will let the AI determine which square to be marked.
- *       Finally, it will return true to tell the board should be render immediately.
- *       Then go to step 4.
- * 3. After the turn is finished(human marked), 
- *    call `getBoard()` to get the latest board so as to render the board.
- * 4. Call `isGameOver()` to check whether game is over.
- *    If it is not over, back to step 2.
- */
 const Game = (() => {
-    const _player1 = Player();
-    const _player2 = Player();
-    let _currentPlayer = _player1;
-    let _turn = "X";
+    const player1 = Player();
+    const player2 = Player();
+    let currentPlayer = player1;
 
-    /**
-     * Initialize two players' state, whose turn and the game board.
-     * @param {Object} player1Setting
-     * @param {Object} player2Setting
-     */
-    const initGame = (player1Setting, player2Setting) => {
-        Board.initBoard();
-        _turn = "X";
-        _player1.initPlayer(player1Setting);
-        _player2.initPlayer(player2Setting);
-        if (_player1.getChar() === "X")
-            _currentPlayer = _player1;
-        else
-            _currentPlayer = _player2;
+    const initialize = (setting1, setting2) => {
+        player1.initialize(setting1);
+        player2.initialize(setting2);
+        currentPlayer = (player1.getCharacter() === "X") ? player1 : player2;
+        Board.initialize();
+
+        determineAction();
     };
-
-    /**
-     * If the current player is AI, calling the method will let AI determine
-     * which square it want to mark.
-     */
-    const startTurn = () => {
-        if (_currentPlayer.getType() === "AI") {
-            mark(_currentPlayer.determineByAI(), "AI")
+    const determineAction = () => {
+        if (currentPlayer.getType() === "AI") {
+            markByAI();
         }
     };
-
-    /**
-     * Current player mark a square at `index`.
-     * If success, change current player.
-     * 
-     * @param {number} index
-     * @param {string} type
-     * @returns {boolean} success or not.
-     */
-    const mark = (index, type) => {
-        if (_currentPlayer.getType() !== type || isGameover()) {
-            return false;
-        } else {
-            if (Board.setSquares(index, _currentPlayer.getChar())) {
-                _currentPlayer = _currentPlayer === _player1 ? _player2 : _player1;
-                startTurn();
-                return true;
-            }
-            else
-                return false;
+    const markByAI = () => {
+        if (currentPlayer.getMode() === "easy") {
+            currentPlayer.markByEasyAI(currentPlayer.getCharacter());
+            checkGameOver();
         }
     };
-
-    /**
-     * Get the game board.
-     */
-    const getBoard = () => { return Board.getSquares(); };
-
-    /**
-     * Check whether game is over.
-     * @returns {string} The result if game is over. Null if game is not over.
-     */
-    const isGameover = () => {
-        const squares = Board.getSquares();
+    const markByHuman = () => { };
+    const render = () => { };
+    const checkGameOver = () => {
         const lines = [
             [0, 1, 2],
             [3, 4, 5],
@@ -167,30 +86,40 @@ const Game = (() => {
             [1, 4, 7],
             [2, 5, 8],
             [0, 4, 8],
-            [2, 4, 6],
+            [2, 4, 6]
         ];
+        const squares = Board.squaresArray;
         for (let i = 0; i < lines.length; i++) {
-            const [a, b, c] = lines[i];
-            if (squares[a] !== "" && squares[a] === squares[b] && squares[a] === squares[c]) {
-                return squares[a];
+            const [a,b,c] = lines[i];
+            if (squares[a].textContent !== ""
+                && squares[a].textContent === squares[b].textContent
+                && squares[a].textContent === squares[c].textContent) {
+                showResult();
+                return;
             }
         }
 
-        const remainingSquares = squares.filter(value => value === "");
-        if(remainingSquares.length === 0){
-            return "tie";
+        const isNotEmpty = (value) => value.textContent !== "";
+        if(squares.every(isNotEmpty)) {
+            showResult();
+            return;
+        }else {
+            changeTurn();
         }
-
-        return null;
+    };
+    const changeTurn = () => {
+        console.log("change turn");
+        currentPlayer = currentPlayer === player1 ? player2 : player1;
+        setTimeout(determineAction, 500);
+    };
+    const showResult = () => {
+        console.log("show result");
     };
 
     return {
-        initGame,
-        startTurn,
-        getBoard,
-        mark,
-        isGameover,
+        initialize,
     };
 })();
 
-export { Game };
+Game.initialize({ character: "X", type: "AI", mode: "easy" },
+    { character: "O", type: "AI", mode: "easy" });
