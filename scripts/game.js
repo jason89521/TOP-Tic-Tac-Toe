@@ -76,7 +76,6 @@ const Game = (() => {
         }
     };
     const markByHuman = () => { };
-    const render = () => { };
     const checkGameOver = () => {
         const lines = [
             [0, 1, 2],
@@ -94,26 +93,29 @@ const Game = (() => {
             if (squares[a].textContent !== ""
                 && squares[a].textContent === squares[b].textContent
                 && squares[a].textContent === squares[c].textContent) {
-                showResult();
+                showResult(squares[a].textContent);
                 return;
             }
         }
 
         const isNotEmpty = (value) => value.textContent !== "";
         if(squares.every(isNotEmpty)) {
-            showResult();
+            showResult("tie");
             return;
         }else {
             changeTurn();
         }
     };
     const changeTurn = () => {
-        console.log("change turn");
         currentPlayer = currentPlayer === player1 ? player2 : player1;
-        setTimeout(determineAction, 500);
+        if(currentPlayer.getType() === "AI"){
+            setTimeout(determineAction, 500);
+        } else {
+            determineAction();
+        }
     };
-    const showResult = () => {
-        console.log("show result");
+    const showResult = (result) => {
+        console.log(result);
     };
 
     return {
