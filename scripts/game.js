@@ -58,6 +58,8 @@ const Game = (() => {
             _currentPlayer.markByEasyAI(Board.squaresArray);
         } else if(mode === "Normal") {
             _currentPlayer.markByNormaAI(Board.squaresArray);
+        } else if(mode === "Unbeatable") {
+            _currentPlayer.markByUnbeatableAI(Board.squaresArray);
         }
         const result = _isGameOver();
         if (result) _showResult(result);

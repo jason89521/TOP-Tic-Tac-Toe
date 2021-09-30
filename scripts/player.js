@@ -11,7 +11,7 @@ const Player = () => {
     let _type = "";
     let _mode = "";
 
-    const _getEmptySquares = (squares) =>{
+    const _getEmptySquares = (squares) => {
         const remainingSquares = [];
         squares.forEach((value) => {
             if (value.textContent === "") {
@@ -20,6 +20,77 @@ const Player = () => {
         });
         return remainingSquares;
     }
+
+    const _isGameOver = (gameBoard) => {
+        const lines = [
+            [0, 1, 2],
+            [3, 4, 5],
+            [6, 7, 8],
+            [0, 3, 6],
+            [1, 4, 7],
+            [2, 5, 8],
+            [0, 4, 8],
+            [2, 4, 6]
+        ];
+        for(let i = 0; i < lines.length; i++) {
+            const [a, b, c] = lines[i];
+            if(gameBoard[a] !== "" && gameBoard[a] === gameBoard[b] && gameBoard[a] === gameBoard[c]) {
+                return gameBoard[a];
+            }
+        }
+        const isNotEmpty = value => value !== "";
+        if(gameBoard.every(isNotEmpty)) {
+            return "tie";
+        }
+        return null;
+    }
+
+    const _miniMax = (gameBoard, currentTurn, depth) => {
+        let index = -1;
+        let value = 0;
+        const gameResult = _isGameOver(gameBoard);
+        if(gameResult) {
+            if(gameResult === "tie") {
+                // do nothing
+            } else if(gameResult === _character) {
+                value = 10 - depth;
+            } else {
+                value = depth - 10;
+            }
+            return { index, value};
+        }
+        
+        const nextTurn = (currentTurn === "X") ? "O" : "X";
+        if(currentTurn === _character) {
+            value = -Infinity;
+            for(let i = 0; i < gameBoard.length; i++) {
+                if(gameBoard[i] === "") {
+                    gameBoard[i] = currentTurn;
+                    const temp = _miniMax(gameBoard, nextTurn, depth+1);
+                    if(temp.value > value) {
+                        value = temp.value;
+                        index = i;
+                    }
+                    gameBoard[i] = "";
+                }
+            }
+        } else {
+            value = Infinity;
+            for(let i = 0; i < gameBoard.length; i++) {
+                if(gameBoard[i] === "") {
+                    gameBoard[i] = currentTurn;
+                    const temp = _miniMax(gameBoard, nextTurn, depth+1);
+                    if(temp.value < value) {
+                        value = temp.value;
+                        index = i;
+                    }
+                    gameBoard[i] = "";
+                }
+            }
+        }
+
+        return {index, value};
+    };
 
     const initialize = (setting) => {
         _character = setting.character;
@@ -42,8 +113,21 @@ const Player = () => {
         remainingSquares[index].textContent = _character;
     }
 
-    const markByUnbeatable = (squares) => {
+    /**
+     * @param {Array<HTMLElement>} squares 
+     */
+    const markByUnbeatableAI = (squares) => {
+        const gameBoard = [];
+        squares.forEach((value) => {
+            gameBoard.push(value.textContent);
+        })
 
+        const index = _miniMax(gameBoard, _character, 0).index;
+        if(index !== -1) {
+            squares[index].textContent = _character;
+        }else{
+            console.error("Index out of range.");
+        }
     }
 
     return {
@@ -53,7 +137,7 @@ const Player = () => {
         getMode,
         markByEasyAI,
         markByNormaAI,
-        markByUnbeatable,
+        markByUnbeatableAI,
     };
 };
 
