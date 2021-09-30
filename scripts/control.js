@@ -77,8 +77,6 @@ function hideDropdown() {
         toBeHide.classList.remove("show-content");
     }
 }
-<<<<<<< HEAD
-=======
 
 function disableMode (playerType) {
     if(playerType === player1Type) {
@@ -95,4 +93,3 @@ function activateMode(playerType) {
         player2Mode.classList.remove("disabled");
     }
 }
->>>>>>> optimize
