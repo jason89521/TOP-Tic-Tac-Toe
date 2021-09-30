@@ -1,4 +1,4 @@
-import { Player, PlayerSetting} from "./player.js";
+import { Player, PlayerSetting } from "./player.js";
 
 const Board = (() => {
     const squares = document.querySelectorAll(".square");
@@ -14,7 +14,7 @@ const Board = (() => {
     };
 
     const isValidIndex = (index) => {
-        if(index < 0 || index >= squaresArray.length) {
+        if (index < 0 || index >= squaresArray.length) {
             console.error("Index out of range");
             return false;
         }
@@ -29,44 +29,50 @@ const Board = (() => {
 })();
 
 const Game = (() => {
-    const player1 = Player();
-    const player2 = Player();
-    let currentPlayer = player1;
+    const _modal = document.getElementById("modal");
+    _modal.addEventListener("click", (event) => {
+        _modal.style.display = "none";
+    });
+    const _resultMsg = document.getElementById("resultMsg");
+    const _boardContainer = document.getElementById("board-container");
+    _boardContainer.addEventListener("click", (event) => {
+        const index = event.target.dataset.index;
+        if (index) {
+            _markByHuman(parseInt(index));
+        }
+    });
 
-    const initialize = (setting1, setting2) => {
-        player1.initialize(setting1);
-        player2.initialize(setting2);
-        currentPlayer = (player1.getCharacter() === "X") ? player1 : player2;
-        Board.initialize();
+    const _player1 = Player();
+    const _player2 = Player();
+    let _currentPlayer = _player1;
+    let _timeoutID;
 
-        determineAction();
-    };
-    const determineAction = () => {
-        if (currentPlayer.getType() === "AI") {
-            markByAI();
+    const _determineAction = () => {
+        if (_currentPlayer.getType() === "AI") {
+            _timeoutID = setTimeout(_markByAI, 500);
         }
     };
-    const markByAI = () => {
-        if (currentPlayer.getMode() === "easy") {
-            currentPlayer.markByEasyAI(Board.squaresArray);
-            const result = isGameOver();
-            if(result) showResult(result);
-            else changeTurn();
+    const _markByAI = () => {
+        if (_currentPlayer.getMode() === "Easy") {
+            _currentPlayer.markByEasyAI(Board.squaresArray);
+            const result = _isGameOver();
+            if (result) _showResult(result);
+            else _changeTurn();
         }
     };
-    const markByHuman = (index) => {
-        if(!Board.isValidIndex(index) || currentPlayer.getType() !== "human"){
+    const _markByHuman = (index) => {
+        if (!Board.isValidIndex(index) || _currentPlayer.getType() !== "human") {
             return;
         }
-        if(isGameOver()){
+        if (_isGameOver()) {
             return;
         }
-        Board.squaresArray[index].textContent = currentPlayer.getCharacter();
-        const result = isGameOver();
-        if(result) showResult(result);
-        else changeTurn();
+        Board.squaresArray[index].textContent = _currentPlayer.getCharacter();
+        const result = _isGameOver();
+        if (result) _showResult(result);
+        else _changeTurn();
     };
-    const isGameOver = () => {
+    const _isGameOver = () => {
         const lines = [
             [0, 1, 2],
             [3, 4, 5],
@@ -79,49 +85,53 @@ const Game = (() => {
         ];
         const squares = Board.squaresArray;
         for (let i = 0; i < lines.length; i++) {
-            const [a,b,c] = lines[i];
+            const [a, b, c] = lines[i];
             if (squares[a].textContent !== ""
-                && squares[a].textContent === squares[b].textContent
-                && squares[a].textContent === squares[c].textContent) {
+            && squares[a].textContent === squares[b].textContent
+            && squares[a].textContent === squares[c].textContent) {
                 return squares[a].textContent;
             }
         }
-
+        
         const isNotEmpty = (value) => value.textContent !== "";
-        if(squares.every(isNotEmpty)) {
+        if (squares.every(isNotEmpty)) {
             return "tie";
-        }else {
+        } else {
             return null;
         }
     };
-    const changeTurn = () => {
-        currentPlayer = currentPlayer === player1 ? player2 : player1;
-        if(currentPlayer.getType() === "AI"){
-            setTimeout(determineAction, 500);
+    const _changeTurn = () => {
+        _currentPlayer = _currentPlayer === _player1 ? _player2 : _player1;
+        if (_currentPlayer.getType() === "AI") {
+            _determineAction();
         } else {
-            determineAction();
+            _determineAction();
         }
     };
-    const showResult = (result) => {
-        console.log(result);
+    const _showResult = (result) => {
+        _modal.style.display = "";
+        if(result === "tie") {
+            _resultMsg.textContent = "It is a tie.";
+        }else {
+            _resultMsg.textContent = `The winner is ${result}.`;
+        }
     };
-
+    
+    const startGame = (setting1, setting2) => {
+        _modal.style.display = "none";
+        _player1.initialize(setting1);
+        _player2.initialize(setting2);
+        _currentPlayer = (_player1.getCharacter() === "X") ? _player1 : _player2;
+        clearTimeout(_timeoutID);
+        Board.initialize();
+    
+        _determineAction();
+    };
     return {
-        initialize,
-        markByHuman,
+        startGame,
     };
 })();
 
-Game.initialize(PlayerSetting("X", "AI", "easy"),
-    PlayerSetting("O", "AI", "easy"));
+Game.startGame(PlayerSetting("X", "human", "Easy"), PlayerSetting("O", "human", "Easy"));
 
-const boardContainer = document.getElementById("board-container");
-
-boardContainer.addEventListener("click", (event) => {
-    const index = event.target.dataset.index;
-    if(index) {
-        Game.markByHuman(parseInt(index));
-    }
-});
-
-export {Game};
+export { Game };

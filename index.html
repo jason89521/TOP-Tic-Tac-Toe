@@ -9,19 +9,37 @@
 
     <link rel="stylesheet" href="./stylesheets/index.css">
     <link rel="stylesheet" href="./stylesheets/board.css">
+    <link rel="stylesheet" href="./stylesheets/form.css">
+    <link rel="stylesheet" href="./stylesheets/dropdown.css">
 </head>
 
 <body>
+    <div id="modal">
+        <h1 id="resultMsg">It is a tie.</h1>
+    </div>
+    <header>
+        Tic Tac Toe
+    </header>
     <main>
         <form id="player1-setting">
             <h1>X's setting</h1>
-            <select name="type">
-                <option selected="selected" value="human">Human</option>
-                <option value="AI">AI</option>
-            </select>
-            <select name="mode">
-                <option selected="select" value="easy">Easy</option>
-            </select>
+            <div id="player1-type" class="dropdown">
+                <p>Human</p>
+                <div class="dropdown-content">
+                    <p data-type="human">Human</p>
+                    <p data-type="AI">AI</p>
+                </div>
+            </div>
+
+            <div id="player1-mode" class="dropdown">
+                <p>Easy</p>
+                <div class="dropdown-content">
+                    <p data-mode="Easy">Easy</p>
+                </div>
+            </div>
+
+            <input type="text" name="type" value="human" hidden>
+            <input type="text" name="mode" value="Easy" hidden>
         </form>
 
         <div>
@@ -42,19 +60,28 @@
                     <button class="square" data-index="8"></button>
                 </div>
             </div>
-            <button id="init">Start</button>
+            <button id="init">Start a new game</button>
         </div>
-
 
         <form id="player2-setting">
             <h1>O's setting</h1>
-            <select name="type">
-                <option selected="selected" value="human">Human</option>
-                <option value="AI">AI</option>
-            </select>
-            <select name="mode">
-                <option selected="select" value="easy">Easy</option>
-            </select>
+            <div id="player2-type" class="dropdown">
+                <p>Human</p>
+                <div class="dropdown-content">
+                    <p data-type="human">Human</p>
+                    <p data-type="AI">AI</p>
+                </div>
+            </div>
+
+            <div id="player2-mode" class="dropdown">
+                <p>Easy</p>
+                <div class="dropdown-content">
+                    <p data-mode="Easy">Easy</p>
+                </div>
+            </div>
+
+            <input type="text" name="type" value="human" hidden>
+            <input type="text" name="mode" value="Easy" hidden>
         </form>
     </main>
 </body>
