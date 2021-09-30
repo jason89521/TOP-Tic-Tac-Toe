@@ -53,15 +53,18 @@ const Game = (() => {
         }
     };
     const _markByAI = () => {
-        if (_currentPlayer.getMode() === "Easy") {
+        const mode = _currentPlayer.getMode();
+        if (mode === "Easy") {
             _currentPlayer.markByEasyAI(Board.squaresArray);
-            const result = _isGameOver();
-            if (result) _showResult(result);
-            else _changeTurn();
+        } else if(mode === "Normal") {
+            _currentPlayer.markByNormaAI(Board.squaresArray);
         }
+        const result = _isGameOver();
+        if (result) _showResult(result);
+        else _changeTurn();
     };
     const _markByHuman = (index) => {
-        if (!Board.isValidIndex(index) || _currentPlayer.getType() !== "human") {
+        if (!Board.isValidIndex(index) || _currentPlayer.getType() !== "Human") {
             return;
         }
         if (_isGameOver()) {
@@ -132,6 +135,6 @@ const Game = (() => {
     };
 })();
 
-Game.startGame(PlayerSetting("X", "human", "Easy"), PlayerSetting("O", "human", "Easy"));
+Game.startGame(PlayerSetting("X", "Human", "Easy"), PlayerSetting("O", "Human", "Easy"));
 
 export { Game };

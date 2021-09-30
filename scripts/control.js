@@ -30,28 +30,24 @@ window.addEventListener("click", hideDropdown);
  */
 function clickDropdown(formElement, event) {
     event.stopPropagation();
-    if(document.querySelector(".show-content") !== this) {
+    if (document.querySelector(".show-content") !== this) {
         hideDropdown();
     }
-    
+
     const display = this.querySelector("p");
     const elements = formElement.elements;
     const type = event.target.dataset.type;
     const mode = event.target.dataset.mode;
-    if(!type && !mode ) this.classList.toggle("show-content");
+    if (!type && !mode) this.classList.toggle("show-content");
 
-    if(type) {
-        if(type === "human")
-            changeSetting(display, "Human", elements["type"], "human");
-        else if(type === "AI")
-            changeSetting(display, "AI", elements["type"], "AI");
-        
+    if (type) {
+        changeSetting(display, type, elements["type"], type);
+
         hideDropdown();
     }
 
-    if(mode) {
-        if(mode === "Easy")
-            changeSetting(display, "Easy", elements["mode"], "Easy");
+    if (mode) {
+        changeSetting(display, mode, elements["mode"], mode);
 
         hideDropdown();
     }
@@ -64,7 +60,7 @@ function changeSetting(display, content, input, value) {
 
 function hideDropdown() {
     const toBeHide = document.querySelector(".show-content");
-    if(toBeHide) {
+    if (toBeHide) {
         toBeHide.classList.remove("show-content");
     }
 }
