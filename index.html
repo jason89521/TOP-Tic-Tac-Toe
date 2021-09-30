@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -8,32 +9,85 @@
 
     <link rel="stylesheet" href="./stylesheets/index.css">
     <link rel="stylesheet" href="./stylesheets/board.css">
+    <link rel="stylesheet" href="./stylesheets/form.css">
+    <link rel="stylesheet" href="./stylesheets/dropdown.css">
 </head>
+
 <body>
+    <div id="modal">
+        <h1 id="resultMsg">It is a tie.</h1>
+    </div>
+    <header>
+        Tic Tac Toe
+    </header>
     <main>
-        <div id="control-container">
-            <button data-control="start">Start a new game</button>
+        <form id="player1-setting">
+            <h1>X's setting</h1>
+            <div id="player1-type" class="dropdown">
+                <p>Human</p>
+                <div class="dropdown-content">
+                    <p data-type="Human">Human</p>
+                    <p data-type="AI">AI</p>
+                </div>
+            </div>
+
+            <div id="player1-mode" class="dropdown">
+                <p>Easy</p>
+                <div class="dropdown-content">
+                    <p data-mode="Easy">Easy</p>
+                    <p data-mode="Normal">Normal</p>
+                </div>
+            </div>
+
+            <input type="text" name="type" value="Human" hidden>
+            <input type="text" name="mode" value="Easy" hidden>
+        </form>
+
+        <div>
+            <div id="board-container">
+                <div class="board-row">
+                    <button class="square" data-index="0"></button>
+                    <button class="square" data-index="1"></button>
+                    <button class="square" data-index="2"></button>
+                </div>
+                <div class="board-row">
+                    <button class="square" data-index="3"></button>
+                    <button class="square" data-index="4"></button>
+                    <button class="square" data-index="5"></button>
+                </div>
+                <div class="board-row">
+                    <button class="square" data-index="6"></button>
+                    <button class="square" data-index="7"></button>
+                    <button class="square" data-index="8"></button>
+                </div>
+            </div>
+            <button id="init">Start a new game</button>
         </div>
 
-        <div id="board-container">
-            <div class="board-row">
-                <button class="square" data-index="0"></button>
-                <button class="square" data-index="1"></button>
-                <button class="square" data-index="2"></button>
+        <form id="player2-setting">
+            <h1>O's setting</h1>
+            <div id="player2-type" class="dropdown">
+                <p>Human</p>
+                <div class="dropdown-content">
+                    <p data-type="Human">Human</p>
+                    <p data-type="AI">AI</p>
+                </div>
             </div>
-            <div class="board-row">
-                <button class="square" data-index="3"></button>
-                <button class="square" data-index="4"></button>
-                <button class="square" data-index="5"></button>
+
+            <div id="player2-mode" class="dropdown">
+                <p>Easy</p>
+                <div class="dropdown-content">
+                    <p data-mode="Easy">Easy</p>
+                    <p data-mode="Normal">Normal</p>
+                </div>
             </div>
-            <div class="board-row">
-                <button class="square" data-index="6"></button>
-                <button class="square" data-index="7"></button>
-                <button class="square" data-index="8"></button>
-            </div>
-        </div>
+
+            <input type="text" name="type" value="Human" hidden>
+            <input type="text" name="mode" value="Easy" hidden>
+        </form>
     </main>
 </body>
 <script src="./scripts/game.js" type="module"></script>
 <script src="./scripts/control.js" type="module"></script>
+
 </html>
