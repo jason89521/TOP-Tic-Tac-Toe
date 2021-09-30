@@ -1,44 +1,4 @@
-const PlayerSetting = (character, type, mode) => {
-    return{
-        character,
-        type,
-        mode,
-    };
-}
-
-const Player = () => {
-    let _character = "";
-    let _type = "";
-    let _mode = "";
-
-    const initialize = (setting) => {
-        _character = setting.character;
-        _type = setting.type;
-        _mode = setting.mode;
-    };
-
-    const getCharacter = () => _character;
-    const getType = () => _type;
-    const getMode = () => _mode;
-
-    const markByEasyAI = (character) => {
-        const remainingSquare = [];
-        Board.squaresArray.forEach((value) => {
-            if (value.textContent === "") {
-                remainingSquare.push(value);
-            }
-        });
-        remainingSquare[0].textContent = character;
-    }
-
-    return {
-        initialize,
-        getCharacter,
-        getType,
-        getMode,
-        markByEasyAI,
-    };
-};
+import { Player, PlayerSetting} from "./player.js";
 
 const Board = (() => {
     const squares = document.querySelectorAll(".square");
@@ -88,7 +48,7 @@ const Game = (() => {
     };
     const markByAI = () => {
         if (currentPlayer.getMode() === "easy") {
-            currentPlayer.markByEasyAI(currentPlayer.getCharacter());
+            currentPlayer.markByEasyAI(Board.squaresArray);
             const result = isGameOver();
             if(result) showResult(result);
             else changeTurn();
@@ -152,8 +112,8 @@ const Game = (() => {
     };
 })();
 
-Game.initialize(PlayerSetting("X", "human", "easy"),
-    PlayerSetting("O", "human", "easy"));
+Game.initialize(PlayerSetting("X", "AI", "easy"),
+    PlayerSetting("O", "AI", "easy"));
 
 const boardContainer = document.getElementById("board-container");
 
@@ -163,3 +123,5 @@ boardContainer.addEventListener("click", (event) => {
         Game.markByHuman(parseInt(index));
     }
 });
+
+export {Game};

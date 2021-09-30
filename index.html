@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -9,31 +10,55 @@
     <link rel="stylesheet" href="./stylesheets/index.css">
     <link rel="stylesheet" href="./stylesheets/board.css">
 </head>
+
 <body>
     <main>
-        <div id="control-container">
-            <button data-control="start">Start a new game</button>
+        <form id="player1-setting">
+            <h1>X's setting</h1>
+            <select name="type">
+                <option selected="selected" value="human">Human</option>
+                <option value="AI">AI</option>
+            </select>
+            <select name="mode">
+                <option selected="select" value="easy">Easy</option>
+            </select>
+        </form>
+
+        <div>
+            <div id="board-container">
+                <div class="board-row">
+                    <button class="square" data-index="0"></button>
+                    <button class="square" data-index="1"></button>
+                    <button class="square" data-index="2"></button>
+                </div>
+                <div class="board-row">
+                    <button class="square" data-index="3"></button>
+                    <button class="square" data-index="4"></button>
+                    <button class="square" data-index="5"></button>
+                </div>
+                <div class="board-row">
+                    <button class="square" data-index="6"></button>
+                    <button class="square" data-index="7"></button>
+                    <button class="square" data-index="8"></button>
+                </div>
+            </div>
+            <button id="init">Start</button>
         </div>
 
-        <div id="board-container">
-            <div class="board-row">
-                <button class="square" data-index="0"></button>
-                <button class="square" data-index="1"></button>
-                <button class="square" data-index="2"></button>
-            </div>
-            <div class="board-row">
-                <button class="square" data-index="3"></button>
-                <button class="square" data-index="4"></button>
-                <button class="square" data-index="5"></button>
-            </div>
-            <div class="board-row">
-                <button class="square" data-index="6"></button>
-                <button class="square" data-index="7"></button>
-                <button class="square" data-index="8"></button>
-            </div>
-        </div>
+
+        <form id="player2-setting">
+            <h1>O's setting</h1>
+            <select name="type">
+                <option selected="selected" value="human">Human</option>
+                <option value="AI">AI</option>
+            </select>
+            <select name="mode">
+                <option selected="select" value="easy">Easy</option>
+            </select>
+        </form>
     </main>
 </body>
 <script src="./scripts/game.js" type="module"></script>
 <script src="./scripts/control.js" type="module"></script>
+
 </html>
