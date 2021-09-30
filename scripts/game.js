@@ -13,6 +13,10 @@ const Board = (() => {
         });
     };
 
+    /**
+     * @param {number} index 
+     * @returns 
+     */
     const isValidIndex = (index) => {
         if (index < 0 || index >= squaresArray.length) {
             console.error("Index out of range");
@@ -28,13 +32,22 @@ const Board = (() => {
     };
 })();
 
+/**
+ * The life cycle of a turn
+ * 1. call _determineAction()
+ * 2. wait the player mark
+ * 3. check whether the game is over
+ * 4. if it is not over, change the turn and back to step 2
+ */
 const Game = (() => {
     const _modal = document.getElementById("modal");
+    const _boardContainer = document.getElementById("board-container");
+    const _resultMsg = document.getElementById("resultMsg");
+    // Hide the modal when user click it.
     _modal.addEventListener("click", (event) => {
         _modal.style.display = "none";
     });
-    const _resultMsg = document.getElementById("resultMsg");
-    const _boardContainer = document.getElementById("board-container");
+    // Handle users click on the squares.
     _boardContainer.addEventListener("click", (event) => {
         const index = event.target.dataset.index;
         if (index) {
@@ -47,8 +60,12 @@ const Game = (() => {
     let _currentPlayer = _player1;
     let _timeoutID;
 
+    /**
+     * This method call AI to mark a square.
+     */
     const _determineAction = () => {
         if (_currentPlayer.getType() === "AI") {
+            // Delay a while such that it will not display result immediately when 2 players are AI.
             _timeoutID = setTimeout(_markByAI, 500);
         }
     };
@@ -91,6 +108,7 @@ const Game = (() => {
         const squares = Board.squaresArray;
         for (let i = 0; i < lines.length; i++) {
             const [a, b, c] = lines[i];
+            // There is a winner.
             if (squares[a].textContent !== ""
             && squares[a].textContent === squares[b].textContent
             && squares[a].textContent === squares[c].textContent) {
@@ -107,11 +125,7 @@ const Game = (() => {
     };
     const _changeTurn = () => {
         _currentPlayer = _currentPlayer === _player1 ? _player2 : _player1;
-        if (_currentPlayer.getType() === "AI") {
-            _determineAction();
-        } else {
-            _determineAction();
-        }
+        _determineAction();
     };
     const _showResult = (result) => {
         _modal.style.display = "";
