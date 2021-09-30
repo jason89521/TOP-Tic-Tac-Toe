@@ -25,6 +25,7 @@ player2Mode.classList.add("disabled");
 player1Mode.addEventListener("click", clickDropdown.bind(player1Mode, player1Form));
 player2Mode.addEventListener("click", clickDropdown.bind(player2Mode, player2Form));
 
+// When user click anywhere of the window, hide the dropdown content.
 window.addEventListener("click", hideDropdown);
 
 /**
@@ -35,6 +36,7 @@ function clickDropdown(formElement, event) {
     if(this.classList.contains("disabled"))
         return;
 
+    // If there is another dropdown is already opened, close it.
     if (document.querySelector(".show-content") !== this) {
         hideDropdown();
     }
@@ -43,6 +45,7 @@ function clickDropdown(formElement, event) {
     const elements = formElement.elements;
     const type = event.target.dataset.type;
     const mode = event.target.dataset.mode;
+    // Following means that the user is click on the dropdown button, not content.
     if (!type && !mode) this.classList.toggle("show-content");
 
     if (type) {
