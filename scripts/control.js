@@ -20,6 +20,8 @@ player2Type.addEventListener("click", clickDropdown.bind(player2Type, player2For
 
 const player1Mode = document.getElementById("player1-mode");
 const player2Mode = document.getElementById("player2-mode");
+player1Mode.classList.add("disabled");
+player2Mode.classList.add("disabled");
 player1Mode.addEventListener("click", clickDropdown.bind(player1Mode, player1Form));
 player2Mode.addEventListener("click", clickDropdown.bind(player2Mode, player2Form));
 
@@ -30,6 +32,9 @@ window.addEventListener("click", hideDropdown);
  */
 function clickDropdown(formElement, event) {
     event.stopPropagation();
+    if(this.classList.contains("disabled"))
+        return;
+
     if (document.querySelector(".show-content") !== this) {
         hideDropdown();
     }
@@ -42,8 +47,13 @@ function clickDropdown(formElement, event) {
 
     if (type) {
         changeSetting(display, type, elements["type"], type);
-
         hideDropdown();
+
+        if(type === "Human") {
+            disableMode(this);
+        }else{
+            activateMode(this);
+        }
     }
 
     if (mode) {
@@ -62,5 +72,21 @@ function hideDropdown() {
     const toBeHide = document.querySelector(".show-content");
     if (toBeHide) {
         toBeHide.classList.remove("show-content");
+    }
+}
+
+function disableMode (playerType) {
+    if(playerType === player1Type) {
+        player1Mode.classList.add("disabled");
+    }else{
+        player2Mode.classList.add("disabled");
+    }
+}
+
+function activateMode(playerType) {
+    if(playerType === player1Type) {
+        player1Mode.classList.remove("disabled");
+    } else{
+        player2Mode.classList.remove("disabled");
     }
 }

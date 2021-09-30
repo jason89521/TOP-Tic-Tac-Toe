@@ -46,3 +46,9 @@
 .dropdown-content > p:hover{
     background-color: #66b9ff;
 }
+
+
+.disabled{
+    cursor: not-allowed;
+    background-color: #666666;
+}
