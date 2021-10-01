@@ -37,7 +37,7 @@ const Board = (() => {
  * 1. call _determineAction()
  * 2. wait the player mark
  * 3. check whether the game is over
- * 4. if it is not over, change the turn and back to step 2
+ * 4. if it is not over, change the turn and back to step 1
  */
 const Game = (() => {
     const _modal = document.getElementById("modal");
